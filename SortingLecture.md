@@ -477,4 +477,183 @@ What will it return to us?
 ```
 Okay. Now we get to do the right side...
 
-7:19....
+```js
+mergeSort([3, 2, 70, 48])
+  // left   // right
+  [2, 3]    mergeSort([70, 48])
+```
+
+So for right side, it's too long. 
+Pick midpoint.
+Calculate left
+```js
+mergeSort([3, 2, 70, 48])
+  // left   // right
+  [2, 3]    mergeSort([70, 48])
+              mergeSort([70])  mergeSort([48])
+                [70]            [48]
+                  merge([70], [48])
+                    [48, 70]
+
+[2, 3]  [48, 70]
+    merge([2, 3], [48, 70])
+      [2, 3, 48, 70]
+```
+
+Go back to Merge Sort in an Image Diagram:
+![]()
+Does not show you the order things are happening in. 
+Gives you the ILLUSION that left and right are happening at the SAME time. 
+Go back to visualgo Merge Sort algo demostration. (We got to 4 elements only.)
+Use python tutor to check out call stack, but great exercise to fully understand how this works.
+
+Get a study group and talk about this. Work together.
+
+### Choosing a Sort:
+
+Show Big-O Complexity Chart
+
+#### Intermediate Sorting Algos
+- O(n log n) is fastest possible runtime
+- (for a comparative sort, which is what we typically mean). 
+- n because you have to touch every item in list once.
+- log n because best possible strategy is divide and conquer method.
+- Both merge sort and quick sort use this strategy.
+- This has been proven with a mathematical proof - no COMPARATIVE sorting algo will be faster than O(n log n).
+
+Sorting is expensive.
+
+Time Complexity:??? O(n log n)
+Space Complexity: O(n)
+
+If space is a consideration, we have to consider merge sort alternatives. I've never been in a situation where I had to worry about space.
+
+Compared with bubble sort, everything is in place with i and j pointers. O(1) space. Could be a consideration.
+
+#### Choosing an Algorithm:
+- Performance for your requirements.
+- For small n, simple sorts can be faster.
+
+Some sorting algorithms perform very well depending on the data structure.
+
+If you don't need random access to each element (linked list doesn't have random access), merge sort performs very well with linked list.
+
+Consider Runtime
+
+Likely structure of your data:
+  - Random?
+  - Almost reversed?
+  - Almost sorted?
+  - Likely duplicates?
+
+#### Fancy Sorting Algos => Adaptive Sorting Algos
+Basically, there are smarter sorting algos that can decide which sorting algo they should use depending on certain conditions.
+
+Adaptive sorts examine input data and can:
+- Choose underlying sorting algorithm to use
+- Switch between algorithms during same sort
+  Example: starting sorting with merge sort, switch to insertion sort once subarrays get small (typically faster than merge sorting all)
+
+#### What do Python and Javascript use?
+- Javascript
+  - Chrome & Node: "Timsort", an adaptive Merge Sort/Insertion Sort
+  - Firefox: Merge Sort
+- Python
+  - "Timsort"
+
+Some languages use adaptive sort depending on what the data looks like.
+Basically, real-world sorting often happens much faster than worst case scenarios.
+
+#### Other Sorting Topics:
+Comparators:
+- [x] Javascript built-in sort method accepts optional comparator function
+- [x] Can provide this function to decide how two items compare
+- [x] Comparator takes pair of elements (a & b) and returns sort order
+  - Returns negative number: a should come before b
+  - Returns positive number: a should come after b
+  - Returns 0: a and b sort equally
+
+```js
+let numbers = [100, 60, 1000, 2000]
+// Encodes with UTF-8. Turns elements into string and compares them.
+numbers.sort() // [100, 1000, 2000, 60]
+numbers.sort((a, b) => a - b) // [60, 100, 1000, 2000]
+```
+
+```js
+let instructors = [
+  {name: "Sarah Rose", favLang: "Go"},
+  {name: "Troy", favLang: "R"},
+  {name: "Ken", favLang: "English"}
+]
+
+instructors.sort() // not gonna help
+
+instructors.sort( (a, b) => {
+    if (a.name < b.name) return -1
+    if (a.name > b.name) return 1
+    return 0;
+})
+```
+
+#### Stable Sorts:
+Sometimes, you are sorting items that are different but would sort the same:
+Example: to sort these by priority:
+```js
+const tasks = [
+  {priority: 1, task: "Drink coffee"},
+  {priority: 2, task: "Wash dishes"},
+  {priority: 1, task: "Get ride to airpot"},
+  {priority: 3, task: "Take shower"},
+]
+
+// Notice how we have multiple priority 1s? 
+// "Stable sort" guarantees that Drink Coffee sorts before Get ride to airport - even though both have equal priorities, they started in that order.
+```
+
+So when we have UNIQUE data (no duplicates), we should always get the same results anyway with sort.
+
+When there are duplicates, certain algos (like Selection Sort), is not stable. But merge sort is stable here.
+
+So what is Stable sorting for our tasks array?
+
+#### Collations:
+How two strings compare in a language is controlled by their "collation"
+- [x] Capitalization: does "a" sort before or after "Z"?
+- [x] Does "é" sort with "e"? After "e" and before "f"? At the end?
+
+Basically, some languages/frameworks/databases let you choose a collation for a sort.
+
+#### Comparative/Non-Comparative Sorts
+- [x] Most sorting algos are "comparative".
+- [x] Items need to be compared against each other to know how to sort them
+- [x] Comparative sorting can NEVER be better than O(n log n)
+
+But not all sorting requires comparison!
+
+Visualgo Radix Sort Demo: Show Students.
+Only sorts numbers.
+Uses buckets.
+We get a sort without ever comparing anything. Radix sort is actually faster O(nk), but only works with numbers.
+
+# What YOU NEED TO KNOW!
+1. Best possible "comparative sort is O(n log n).
+2. Sorting in Javascript:
+- How to use .sort() method
+- Remember: JS sorting is lexicographic, not numeric, by default
+- How to write a comparator function. 
+
+## Useful to know: Don't NEED to know.
+- How to implement merge sort
+- How to implement insertion sort
+- How to implement quicksort
+
+# Resource:
+Highly recommend BaseCS
+[Sorting out the basics behind sorting algorithms](https://medium.com/basecs/sorting-out-the-basics-behind-sorting-algorithms-b0a032873add)
+[Timsort](https://en.wikipedia.org/wiki/Timsort)
+[Visualizing Sorts](https://visualgo.net/en)
+
+Highly unlikely in an interview someone will ask you to implement quicksort or merge sort from scratch. But it's worth being able to discuss. 
+
+If you wanan be fully prepared, merge sort, insertion sort (easy), and quick sort (lots of tutorials online)
